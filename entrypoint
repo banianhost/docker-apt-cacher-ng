@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+#envsubst < /etc/apt-cacher-ng/acng.tmpl 
+#         > /etc/apt-cacher-ng/acng.conf
+
+if [ ! -z $ADMIN_AUTH ] ; then
+   echo "Enable Admin AUTH"
+   echo "AdminAuth: $ADMIN_AUTH" > /etc/apt-cacher-ng/security.conf
+fi
+
+if [ ! -z $UBUNTU_BACKEND ] ; then
+   echo "Ubuntu Backend: $UBUNTU_BACKEND"
+   echo $UBUNTU_BACKEND > /etc/apt-cacher-ng/backends_ubuntu
+fi
+
+if [ ! -z $DEBIAN_BACKEND ] ; then
+   echo "Debian Backend: $DEBIAN_BACKEND"
+   echo $DEBIAN_BACKEND > /etc/apt-cacher-ng/backends_debian
+fi
+
+/etc/init.d/apt-cacher-ng start 
+
+tail -f /var/log/apt-cacher-ng/*
